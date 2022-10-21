@@ -1,0 +1,11 @@
+{
+    "pythonVersion": "3.9",
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "extraPaths": ["/opt/homebrew/lib/python3.9/site-packages", "."]
+        }
+    ],
+    "reportGeneralTypeIssues": false,
+    "reportUndefinedVariable": false
+}
