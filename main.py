@@ -1,24 +1,13 @@
 import os
-# from detectron2.engine import DefaultPredictor
-# from detectron2 import model_zoo
-# from detectron2.config import get_cfg
-# import cv2
+from detectron2.engine import DefaultPredictor
+from detectron2 import model_zoo
+from detectron2.config import get_cfg
+import cv2
 from app import app
 import urllib.request
 import uuid
 from flask import Flask, flash, abort, jsonify, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
-
-@app.route("/route")
-def hello_world(filename):
-    return 
-    #config = setup_detectron()
-    config = 'config'
-    vid_path = request.args.get("vid", default="test.mp4", type=str)
-    preds = predict(config, vid_path)
-    return {
-            "words": preds
-        }
 
 def setup_detectron():
     zoo_config = model_zoo.get_config_file(
@@ -40,7 +29,6 @@ def mapper(id: int) -> str:
     return d[id]
 
 def predict(config, vid_path: str) -> list[str]:
-    """
     capture = cv2.VideoCapture(vid_path)
     FPS = int(capture.get(cv2.CAP_PROP_FPS))
     INTERVAL = int(FPS / 2)
@@ -66,8 +54,6 @@ def predict(config, vid_path: str) -> list[str]:
                     words.append(mapped)
             n = 0
         n += 1
-    """
-    return ['slowo1', 'slowo2']
 
 @app.route('/', methods=['POST'])
 def upload_video():
@@ -80,7 +66,7 @@ def upload_video():
         abort(422, description="No file selected for uploading")
 
     fileExtension = secure_filename(file.filename).split('.')[-1]
-    if fileExtension != 'png':
+    if fileExtension != 'webm':
         abort(422, description="Invalid file format")
 
     # Creating file
@@ -89,7 +75,8 @@ def upload_video():
     file.save(filePath)
 
     # Running ML
-    result = predict('config', filePath)
+    config = setup_detectron()
+    result = predict(config, filePath)
 
     # Tidying up
     os.remove(filePath)
