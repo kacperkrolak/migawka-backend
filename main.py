@@ -8,6 +8,9 @@ import urllib.request
 import uuid
 from flask import Flask, flash, abort, jsonify, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
+from flask_cors import CORS, cross_origin
+
+cors = CORS(app)
 
 def setup_detectron():
     zoo_config = model_zoo.get_config_file(
