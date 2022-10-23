@@ -59,6 +59,7 @@ def predict(config, vid_path: str) -> list[str]:
         n += 1
 
 @app.route('/', methods=['POST'])
+@cross_origin()
 def upload_video():
     # Validation
     if 'file' not in request.files:
