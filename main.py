@@ -11,12 +11,12 @@ from werkzeug.utils import secure_filename
 
 def setup_detectron():
     zoo_config = model_zoo.get_config_file(
-        "COCO-Detection/faster_rcnn_R_101_FPN_3x.yaml"
+        "COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml"
     )
     config = get_cfg() 
     config.merge_from_file(zoo_config)
-    config.MODEL.ROI_HEADS.NUM_CLASSES = 2
-    config.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.9
+    config.MODEL.ROI_HEADS.NUM_CLASSES = 5
+    config.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.8
     config.MODEL.WEIGHTS = "models/model_final.pth"
     config.MODEL.DEVICE = "cpu"
     return config
@@ -24,7 +24,10 @@ def setup_detectron():
 def mapper(id: int) -> str:
     d = {
         0: "hello",
-        1: "yes"
+        1: "love you",
+        2: "no",
+        3: "thanks",
+        4: "yes",
     }
     return d[id]
 
@@ -43,7 +46,7 @@ def predict(config, vid_path: str) -> list[str]:
             return words
         
         if n == INTERVAL:
-            frame = cv2.resize(frame, (224, 224))
+            #frame = cv2.resize(frame, (420, 420))
             outputs = predictor(frame)['instances']._fields['pred_classes'].tolist()
             for out in outputs:
                 mapped = mapper(out)
